@@ -1,5 +1,6 @@
 import json
 import requests
+import argparse
 #First go at getting weather data from the Weather.gov API
 
 #All urls are working
@@ -16,11 +17,17 @@ import requests
 #Next two lines for future testing 
 #state = input("Enter the state abbreviation: ")
 #print('ie: WA, OR, CA, etc.')
-url = "https://api.weather.gov/gridpoints/SEW/125,68/forecast/hourly"
+parser = argparse.ArgumentParser(description="Get the weather forecast for a location")
+#parser.add_argument("state", help="The state abbreviation")
+#parser.add_argument("city", help="The city name")
+#args = parser.parse_args()
 
+url = "https://api.weather.gov/gridpoints/SEW/125,68/forecast/hourly"
+#querystring = {"lat":47.6062,"lon":-122.3321}
 headers = {
         "User-Agent": "MyWeatherApp/0.1 (ahendrickson@comcast.net)"
     }
+
 response = requests.get(url, headers=headers)
 if response.status_code == 200: 
     data = response.json()
@@ -33,7 +40,7 @@ else:
 #Using the weather api for ninjas API
 url = "https://weather-by-api-ninjas.p.rapidapi.com/v1/weather"
 
-querystring = {"city":"Seattle"}
+querystring = {"city":"Asheville","state":"NC","country":"US","units":"imperial","lang":"en","format":"json"}
 
 headers = {
 	"X-RapidAPI-Key": "119e51db99mshfbc57f38af04475p1b68eejsn91045bbea6b6",
