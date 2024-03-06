@@ -1,53 +1,32 @@
 import json
 import requests
-#First go at getting weather data from the Weather.gov API
+import argparse
+from geopy.geocoders import Nominatim
+from urllib.parse import urlencode
+from datetime import datetime
+from weather_functions import get_grid_coordinates, get_forecast, get_forecast_hourly, print_forecast, print_forecast_hourly
+#parser = argparse.ArgumentParser(description="Get the weather forecast for a location")
+##parser.add_argument("city", help="The city name")
+#args = parser.parse_args()
+city = "Asheville"
+state = "NC"
+zipcode = "28801"
 
-#All urls are working
-#url = "https://api.weather.gov"
-#url = "https://api.weather.gov/alerts/active/region/AT"
-#url = "https://api.weather.gov/alerts/active/area/TN"
-#lat = 47.6062
-#lon = -122.3321
- #url = "https://api.weather.gov/points/47.6062,-122.3321"
-# headers = {
- #   "User-Agent": "MyWeatherApp/0.1 (ahendrickson@comcast.net)"
- #}
-#response = requests.get(url, headers=headers)
-#Next two lines for future testing 
-#state = input("Enter the state abbreviation: ")
-#print('ie: WA, OR, CA, etc.')
-url = "https://api.weather.gov/gridpoints/SEW/125,68/forecast/hourly"
 
-headers = {
-        "User-Agent": "MyWeatherApp/0.1 (ahendrickson@comcast.net)"
+grid_coordinates = get_grid_coordinates({city}, {state}, {zipcode}) # call function and pass the city, state, zipcode
+ # create a dictionry of the parameters ie. {'office':'GSP', 'gridX':'80', 'gridY':'100'}
+params = {
+    'office' : grid_coordinates[0], 
+    'gridX'  : grid_coordinates[1],  
+    'gridY'  : grid_coordinates[2],  
     }
-response = requests.get(url, headers=headers)
-if response.status_code == 200: 
-    data = response.json()
-    print(json.dumps(data, indent=2))
-    #for key, value in data.items():
-        #print(key, data[key]) 
-else:
-    print("Request failed with status code:", response.status_code)
-    print("Response content:", response.text)
-#Using the weather api for ninjas API
-url = "https://weather-by-api-ninjas.p.rapidapi.com/v1/weather"
+office = params['office']
+gridX = params['gridX']
+gridY = params['gridY']
 
-querystring = {"city":"Seattle"}
-
-headers = {
-	"X-RapidAPI-Key": "119e51db99mshfbc57f38af04475p1b68eejsn91045bbea6b6",
-	"X-RapidAPI-Host": "weather-by-api-ninjas.p.rapidapi.com"
-}
-
-response = requests.get(url, headers=headers, params=querystring)
-
-if response.status_code == 200:
-    data = response.json()
-    
-    for key, value in data.items():
-        print(key, data[key])
-    
-else:
-    print("Request failed with status code:", response.status_code)
-    print("Response content:", response.text)
+forecast = get_forecast(grid_coordinates[0], grid_coordinates[1], grid_coordinates[2]) # call function and pass the grid coordinates 
+print_forecast( forecast, city, state, zipcode) # call function and pass the forecast, city, state, zipcode
+forecast_hourly = get_forecast_hourly(grid_coordinates[0], grid_coordinates[1], grid_coordinates[2]) # call function and pass the grid coordinates
+print_forecast_hourly( forecast_hourly, city, state, zipcode) # call function and pass the forecast, city, state, zipcode
+#forecast_grid_data = get_forecast_grid_data(grid_coordinates[0], grid_coordinates[1], grid_coordinates[2]) # call function and pass the grid coordinates
+#print_forecast_grid_data( forecast_grid_data, city, state, zipcode) # call function and pass the forecast, city, state, zipcode
