@@ -5,12 +5,15 @@ from geopy.geocoders import Nominatim
 from urllib.parse import urlencode
 from datetime import datetime
 from weather_functions import get_grid_coordinates, get_forecast, get_forecast_hourly, print_forecast, print_forecast_hourly
-#parser = argparse.ArgumentParser(description="Get the weather forecast for a location")
-##parser.add_argument("city", help="The city name")
-#args = parser.parse_args()
-city = "Asheville"
-state = "NC"
-zipcode = "28801"
+parser = argparse.ArgumentParser(description="Get the weather forecast for a location")
+parser.add_argument("city", help="The city name")
+parser.add_argument("state", help="The state name") 
+parser.add_argument("zipcode", help="The zipcode")  
+args = parser.parse_args()
+city = args.city
+state = args.state
+zipcode = args.zipcode
+
 
 
 grid_coordinates = get_grid_coordinates({city}, {state}, {zipcode}) # call function and pass the city, state, zipcode
